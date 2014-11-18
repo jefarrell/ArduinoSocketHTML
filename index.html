@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<title>Yun with HTML </title>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+		<style>
+			p {
+				width: 100%;
+				font-family: 'Open Sans', sans-serif;
+				font-size: 20px;
+				padding-top: 100px;
+				
+			}
+		</style>
+
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+		<script>
+
+			var socket;
+			/////////////////////////
+			//  LOAD EVENTS   ///////
+			/////////////////////////
+			window.addEventListener('load', function(){
+				//connect to remote server
+				socket = io.connect('/');
+				//on connect, log a message
+				socket.on('connect', function(){
+					console.log("Connected to Socket Server");
+				});
+				
+				// Create a starter paragraph tag
+				var para = document.createElement("p");
+				// When we get new data from Arduino and the socket Client
+				socket.on('Event', function(data){
+					
+					// Empty out our previous p tags
+					// Then, add a new child p tag for each value from Arduino
+					$("p").empty();
+					var dataInt = parseInt(data,10);
+					console.log(dataInt);
+					var sensorDiv = document.getElementById('sensorValues');
+					for (i = 0; i < dataInt; i++) {
+					var node = document.createTextNode("  Arduino made a paragraph!  " + "\n" );
+					para.appendChild(node);
+					sensorDiv.appendChild(para);
+				}
+					// Also change the background color on the Arduino data
+					document.body.style.backgroundColor= "hsl(" + data + ", 100%, 75%)";
+					
+				});		
+			});		
+		</script>
+
+	</head>
+
+	<body>
+		
+		<div id="sensorValues" align='center'>
+			
+		</div>
+
+	</body>
+
+</html>
